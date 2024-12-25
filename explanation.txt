@@ -1,0 +1,187 @@
+To add a login page with username and password functionality to your Spring Boot application, we can use Spring Security, which provides easy-to-use authentication and authorization features.
+
+Here's how to modify your existing program to include a simple login page:
+
+Steps to Implement the Login Page:
+Add Spring Security Dependency:
+
+You need to include Spring Security in your pom.xml to handle authentication and authorization.
+
+xml
+Copy code
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+Create a Security Configuration Class:
+
+You need to configure Spring Security to define how login is handled and which routes are protected.
+
+Create a new class SecurityConfig.java to configure the security for your application:
+
+java
+Copy code
+package com.javatechie;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+            .authorizeRequests()
+                .antMatchers("/login", "/css/**", "/images/**", "/welcome").permitAll() // Allow access to login and static resources
+                .anyRequest().authenticated() // Protect other pages
+                .and()
+            .formLogin()
+                .loginPage("/login") // Custom login page URL
+                .permitAll()
+                .and()
+            .logout()
+                .permitAll();
+    }
+}
+antMatchers("/login", "/css/**", "/images/**", "/welcome").permitAll(): This allows public access to the login page and static resources like CSS and images.
+anyRequest().authenticated(): This secures all other requests, requiring authentication.
+formLogin(): Configures Spring Security to use a custom login page (/login).
+Create the Login Page (login.html):
+
+Now, create the login page where users will enter their credentials. This page should be located in the src/main/resources/templates/ directory.
+
+html
+Copy code
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Java Techie</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login to Java Techie</h2>
+        <form th:action="@{/login}" method="post">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required="required" placeholder="Enter Username">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required="required" placeholder="Enter Password">
+            <button type="submit">Login</button>
+        </form>
+    </div>
+</body>
+</html>
+In this HTML file:
+
+A simple login form with username and password fields.
+The form uses th:action="@{/login}" to ensure it sends the login request to the Spring Security default login URL.
+Define User Authentication:
+
+To authenticate users, you can create an in-memory authentication for simplicity, where we hardcode the username and password.
+
+Modify your SecurityConfig.java class to include the user credentials in the configure(AuthenticationManagerBuilder) method:
+
+java
+Copy code
+package com.javatechie;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.InMemoryUserDetailsManager;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+            .authorizeRequests()
+                .antMatchers("/login", "/css/**", "/images/**", "/welcome").permitAll() // Allow access to login and static resources
+                .anyRequest().authenticated() // Protect other pages
+                .and()
+            .formLogin()
+                .loginPage("/login") // Custom login page URL
+                .permitAll()
+                .and()
+            .logout()
+                .permitAll();
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        // In-memory authentication with username and password
+        auth.inMemoryAuthentication()
+            .withUser("admin")
+            .password("{noop}admin123") // Use {noop} for plaintext passwords (use a proper encoder for real apps)
+            .roles("USER");
+    }
+}
+In-memory authentication: We're creating a user with the username admin and the password admin123. The {noop} prefix means no encoding (just plain text), but in real applications, you should use a proper password encoder.
+Roles: The user has the role USER, which you can use to manage access to different parts of your application.
+Create the Application's Home Page (welcome.html):
+
+Update the welcome.html page to display a custom message for authenticated users. You can show the username or any other information if required.
+
+html
+Copy code
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to Java Techie</title>
+    <style>
+        body {
+            background-image: url('/images/background.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            font-size: 4em;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to Java Techie</h1>
+    <p>You are logged in as <span th:text="${#authentication.name}">Username</span></p>
+</body>
+</html>
+The expression ${#authentication.name} will display the logged-in user's username.
+Run the Application:
+
+Once you have completed all the changes, run the application again:
+
+bash
+Copy code
+./mvnw spring-boot:run
+Test the Login Flow:
+
+Visit http://localhost:8080/ — This will redirect you to the login page.
+Enter the username admin and password admin123.
+Once logged in, you should be redirected to the welcome.html page, displaying the message "Welcome to Java Techie".
+Summary:
+Spring Security is configured to handle the login and protect your application routes.
+Login Page (login.html) is served via Thymeleaf, and authentication is done via Spring Security.
+In-memory user authentication is used to check the login credentials.
+The welcome page (welcome.html) is shown after login, displaying a personalized message.
+This setup will create a simple, secure login page and a home page that can be accessed only after a successful login. You can enhance it further by adding a proper password encoder, user roles, and more.
