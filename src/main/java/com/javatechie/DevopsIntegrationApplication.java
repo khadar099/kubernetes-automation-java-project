@@ -1,20 +1,40 @@
 package com.javatechie;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.InMemoryUserDetailsManager;
 
-@SpringBootApplication
-@Controller
-public class DevopsIntegrationApplication {
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @GetMapping("/")
-    public String welcome() {
-        return "welcome"; // Thymeleaf will look for welcome.html in the templates folder
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+            .authorizeRequests()
+                .antMatchers("/login", "/css/**", "/images/**", "/welcome").permitAll() // Allow access to login and static resources
+                .anyRequest().authenticated() // Protect other pages
+                .and()
+            .formLogin()
+                .loginPage("/login") // Custom login page URL
+                .permitAll()
+                .and()
+            .logout()
+                .permitAll();
     }
 
-    public static void main(String[] args) {
-        SpringApplication.run(DevopsIntegrationApplication.class, args);
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        // In-memory authentication with username and password
+        auth.inMemoryAuthentication()
+            .withUser("admin")
+            .password("{noop}admin123") // Use {noop} for plaintext passwords (use a proper encoder for real apps)
+            .roles("USER");
     }
 }
