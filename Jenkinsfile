@@ -11,11 +11,6 @@ stages {
             sh 'mvn clean install'
         }
     }
-    stage ('test stage') {
-        steps {
-            sh 'mvn test'
-        }
-    }
 }
 
 }
