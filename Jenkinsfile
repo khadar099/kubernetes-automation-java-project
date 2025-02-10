@@ -9,7 +9,7 @@ stages {
     stage ('build docker image , tag and push it to dockerhub') {
         steps {
             sh '''
-            docker build -t shopping .'
+            docker build -t shopping .
             docker tag shopping khadar3099/shopping
             docker push shopping khadar3099/shopping
             '''
