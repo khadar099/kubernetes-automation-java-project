@@ -6,11 +6,14 @@ stages {
             sh 'mvn clean install'
         }
     }
-    stage ('build docker image') {
+    stage ('build docker image , tag and push it to dockerhub') {
         steps {
-            sh ' docker build -t shopping .'
-            sh ' docker tag shopping khadar3099/shopping '
+            sh '''
+            docker build -t shopping .'
+            docker tag shopping khadar3099/shopping
+            docker push shopping khadar3099/shopping
+            '''
             }
          }
-    }
+    }   
 }
