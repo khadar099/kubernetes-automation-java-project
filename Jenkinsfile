@@ -6,7 +6,7 @@ stages {
             sh 'mvn clean install'
         }
     }
-    stage (build docker image) {
+    stage ('build docker image') {
         steps {
             sh ' docker build -t shopping .'
             sh ' docker tag shopping khadar3099/shopping '
