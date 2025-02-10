@@ -12,6 +12,7 @@ stages {
             docker build -t shopping .
             docker tag shopping khadar3099/shopping
             docker push  khadar3099/shopping
+            docker run -d -p 8181:8181 --name shopping_container  khadar3099/shopping
             '''
             }
          }
