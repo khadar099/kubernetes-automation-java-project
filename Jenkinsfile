@@ -11,7 +11,7 @@ stages {
             sh '''
             docker build -t shopping .
             docker tag shopping khadar3099/shopping
-            docker push shopping khadar3099/shopping
+            docker push  khadar3099/shopping
             '''
             }
          }
