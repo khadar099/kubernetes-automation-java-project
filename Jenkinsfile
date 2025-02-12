@@ -9,7 +9,7 @@ stages {
     stage ('build docker image , tag and push it to dockerhub') {
         steps {
             sh '''
-            docker build -t ${JOB_NAME}.${BUILD_NUMBER} .
+            docker build -t ${BUILD_NUMBEshopping_website:v.R} .
             #docker tag shopping khadar3099/shopping
             #docker push  khadar3099/shopping
             #docker rmi khadar3099/shopping
