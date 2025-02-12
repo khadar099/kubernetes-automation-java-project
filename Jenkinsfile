@@ -9,10 +9,11 @@ stages {
     stage ('build docker image , tag and push it to dockerhub') {
         steps {
             sh '''
-            docker build -t shopping .
-            docker tag shopping khadar3099/shopping
-            docker push  khadar3099/shopping
-            docker run -d -p 8181:8181 --name shopping_container  khadar3099/shopping
+            docker build -t ${JOB_NAME}.${BUILD_NUMBER} .
+            #docker tag shopping khadar3099/shopping
+            #docker push  khadar3099/shopping
+            #docker rmi khadar3099/shopping
+            #docker run -d -p 8181:8181 --name shopping_container  khadar3099/shopping
             '''
             }
          }
