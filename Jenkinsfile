@@ -10,6 +10,8 @@ pipeline {
             steps{
                 script{
                     sh 'docker build -t testing:v.${BUILD_NUMBER} .'
+                    sh 'docker tag testing:v.${BUILD_NUMBER} khadar3099/testing:v.${BUILD_NUMBER}'
+                    sh 'docker push khadar3099/testing:v.${BUILD_NUMBER}'
                 }
             }
         
