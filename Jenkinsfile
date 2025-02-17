@@ -27,6 +27,8 @@ stages {
                         sh '''
                         docker login -u khadar3099 -p ${dockerhubpasswrd}
                         docker image push khadar3099/shopping_website:v.$BUILD_ID
+                        docker rmi shopping_website:v.$BUILD_ID || true
+                        docker rmi khadar3099/shopping_website:v.$BUILD_ID || true
                         docker run -d -p 8082:8181 khadar3099/shopping_website:v.$BUILD_ID
                         '''
                         }
