@@ -13,3 +13,5 @@ pipeline {
                 sh ' mkdir basha'
             }
         }
+    }
+}
