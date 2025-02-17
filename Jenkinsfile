@@ -10,9 +10,13 @@ pipeline {
         stage ('build') {
             steps {
                 sh '''
-                ssh -tt -o StrictHostKeyChecking=no ec2-user@44.204.75.60
-                sh mkdir basha
-                sh '''
+                  ssh -o StrictHostKeyChecking=no -tt ubuntu@44.204.75.60
+                  mkdir bashad
+                  cd bashad
+                  touch khadar
+                  EOF
+                  exit
+               sh '''
             }
         }
     }
