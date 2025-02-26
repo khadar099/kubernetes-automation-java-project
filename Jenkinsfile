@@ -9,8 +9,8 @@ stages {
     stage ('build docker image and tag the image') {
         steps {
             sh '''
-            docker build -t shopping_website:v.${BUILD_NUMBER} .
-            docker tag shopping_website:v.${BUILD_NUMBER} khadar3099/shopping_website:v.${BUILD_NUMBER}
+            docker build -t shopping-app:v.${BUILD_NUMBER} .
+            docker tag shopping-app:v.${BUILD_NUMBER} khadar3099/shopping-app:v.${BUILD_NUMBER}
             '''
         }
     }
@@ -18,7 +18,7 @@ stages {
         steps {
             withCredentials([string(credentialsId: 'dockerhubpswd', variable: 'dockerpswd')]) {
                 sh 'docker login -u khadar3099 -p ${dockerpswd}'
-                sh 'docker push khadar3099/shopping_website:v.${BUILD_NUMBER}'
+                sh 'docker push khadar3099/shopping-app:v.${BUILD_NUMBER}'
             }
 
         }
