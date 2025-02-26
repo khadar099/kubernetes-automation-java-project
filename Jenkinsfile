@@ -1,39 +1,32 @@
 pipeline {
-    agent any
-    tools{
-        maven 'maven_3_5_0'
+    agent any 
+stages {
+    stage ('build stage') {
+        steps {
+            sh 'mvn clean install'
+        }
     }
-    stages{
-        stage('Build Maven'){
-            steps{
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Java-Techie-jt/devops-automation']]])
-                sh 'mvn clean install'
-            }
+    stage ('build docker image and tag the image') {
+        steps {
+            sh '''
+            docker build -t shopping_website:v.${BUILD_NUMBER} .
+            docker tag shopping_website:v.${BUILD_NUMBER} khadar3099/shopping_website:v.${BUILD_NUMBER}
+            '''
         }
-        stage('Build docker image'){
-            steps{
-                script{
-                    sh 'docker build -t javatechie/devops-integration .'
-                }
+    }
+    stage ('push docker image to docker hub') {
+        steps {
+            withCredentials([string(credentialsId: 'dockerhubpswd', variable: 'dockerpswd')]) {
+                sh 'docker login -u khadar3099 -p ${dockerpswd}'
+                sh 'docker push khadar3099/shopping_website:v.${BUILD_NUMBER}'
             }
-        }
-        stage('Push image to Hub'){
-            steps{
-                script{
-                   withCredentials([string(credentialsId: 'dockerhub-pwd', variable: 'dockerhubpwd')]) {
-                   sh 'docker login -u javatechie -p ${dockerhubpwd}'
 
-}
-                   sh 'docker push javatechie/devops-integration'
-                }
-            }
-        }
-        stage('Deploy to k8s'){
-            steps{
-                script{
-                    kubernetesDeploy (configs: 'deploymentservice.yaml',kubeconfigId: 'k8sconfigpwd')
-                }
-            }
         }
     }
+    stage ('deploy docker image or run container in ec2 instance') {
+        steps {
+            sh 'docker run -d -p 8181:8181 --name shopping_container  khadar3099/shopping_website:v.${BUILD_NUMBER}'
+        }
+    }
+}   
 }
