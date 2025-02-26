@@ -12,4 +12,3 @@ EXPOSE 8181
 
 # Command to run the Spring Boot app inside the container
 CMD ["java", "-jar", "devops-integration.jar"]
-
