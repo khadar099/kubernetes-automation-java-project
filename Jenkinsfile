@@ -1,23 +1,21 @@
 pipeline {
-    agent any
-
-    stages {
-        stage ('checkout') {
-            steps {
-                checkout scmGit(branches: [[name: '*/feature/changeimage-and-header']], extensions: [], userRemoteConfigs: [[credentialsId: 'GitCreds', url: 'https://github.com/khadar099/kubernetes-automation-java-project.git']])
-            }
-        }
-        stage ('build') {
-            steps {
-                sh '''
-                  ssh -o StrictHostKeyChecking=no -tt ubuntu@44.204.75.60
-                  mkdir bashad
-                  cd bashad
-                  touch khadar
-                  EOF
-                  exit
-               sh '''
-            }
+    agent any 
+stages {
+    stage ('build stage') {
+        steps {
+            sh 'mvn clean install'
         }
     }
+    stage ('build docker image , tag and push it to dockerhub') {
+        steps {
+            sh '''
+            docker build -t shopping_website:v.${BUILD_NUMBER} .
+            docker tag shopping_website:v.${BUILD_NUMBER} khadar3099/shopping_website:v.${BUILD_NUMBER}
+            docker push  khadar3099/shopping_website:v.${BUILD_NUMBER}
+            docker rmi khadar3099/shopping_website:v.40
+            docker run -d -p 8181:8181 --name shopping_container  khadar3099/shopping_website:v.${BUILD_NUMBER}
+            '''
+            }
+         }
+    }   
 }
