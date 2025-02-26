@@ -6,34 +6,6 @@ stages {
             sh 'mvn clean install'
         }
     }
-    stage ('build docker image and tag the image') {
-        steps {
-            sh '''
-            docker build -t shopping-app:v.${BUILD_NUMBER} .
-            docker tag shopping-app:v.${BUILD_NUMBER} khadar3099/shopping-app:v.${BUILD_NUMBER}
-            '''
-        }
-    }
-    stage ('push docker image to docker hub') {
-        steps {
-            withCredentials([string(credentialsId: 'dockerhubpswd', variable: 'dockerpswd')]) {
-                sh 'docker login -u khadar3099 -p ${dockerpswd}'
-                sh 'docker push khadar3099/shopping-app:v.${BUILD_NUMBER}'
-                sh 'docker rmi shopping-app:v.${BUILD_NUMBER}'
-                sh 'docker rmi khadar3099/shopping-app:v.${BUILD_NUMBER}'
-            }
-
-        }
-    }
-    stage ('deploy docker image or run container in ec2 instance') {
-        steps {
-            sh 'docker ps -q -f name=shopping_container && docker stop shopping_container && docker rm shopping_container || echo "Container not found or already stopped."'
-            sh 'docker run -d -p 8181:8181 --name shopping_container  khadar3099/shopping-app:v.${BUILD_NUMBER}'
-        }
-    }
-}   
-        }
-    }
     stage ('build docker image , tag and push it to dockerhub') {
         steps {
             sh '''
@@ -46,5 +18,4 @@ stages {
             }
          }
     }   
-
 }
