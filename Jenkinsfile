@@ -1,6 +1,6 @@
 pipeline {
     agent any
-staegs {
+stages {
    stage('Load .env File and Set Environment Variables') {
             steps {
                 script {
@@ -11,7 +11,8 @@ staegs {
                         sh '''#!/bin/bash
                         # Export each key-value pair in .env as an environment variable
                         set -o allexport
-                        source .env
+                        // shell command source .env to read and load the environment variables from the .env file into the Jenkins pipeline.
+                        source .env 
                         set +o allexport
                         '''
                     } else {
@@ -20,7 +21,6 @@ staegs {
                 }
             }
         }
-    stages {
         stage ('build stage') {
             steps {
                 sh 'mvn clean install'
