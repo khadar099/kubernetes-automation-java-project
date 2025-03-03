@@ -30,10 +30,7 @@ stages {
             sh 'docker ps -q -f name=shopping_container && docker stop shopping_container && docker rm shopping_container || echo "Container not found or already stopped."'
             sh 'docker run -d -p 8181:8181 --name shopping_container  khadar3099/shopping-app:v.${BUILD_NUMBER}'
         }
-    }
-}   
-        }
-    }
+    }   
     stage ('build docker image , tag and push it to dockerhub') {
         steps {
             sh '''
