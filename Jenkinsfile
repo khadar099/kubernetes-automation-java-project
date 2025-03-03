@@ -1,47 +1,56 @@
 pipeline {
-    agent any 
-stages {
-    stage ('build stage') {
-        steps {
-            sh 'mvn clean install'
-        }
+    agent any
+    environment {
+        DOCKER_USERNAME = 'khadar3099'               // Docker username
+        DOCKER_REPO = 'shopping-app'                 // Docker repository name
+        CONTAINER_NAME = 'shopping_container'         // Container name
+        HOST_PORT = '8181'                           // Host port to expose
+        CONTAINER_PORT = '8181'                      // Container port inside the container
+        BUILD_TAG = "${env.BUILD_NUMBER}"            // Docker image tag (build number)
     }
-    stage ('build docker image and tag the image') {
-        steps {
-            sh '''
-            docker build -t shopping-app:v.${BUILD_NUMBER} .
-            docker tag shopping-app:v.${BUILD_NUMBER} khadar3099/shopping-app:v.${BUILD_NUMBER}
-            '''
-        }
-    }
-    stage ('push docker image to docker hub') {
-        steps {
-            withCredentials([string(credentialsId: 'dockerhubpswd', variable: 'dockerpswd')]) {
-                sh 'docker login -u khadar3099 -p ${dockerpswd}'
-                sh 'docker push khadar3099/shopping-app:v.${BUILD_NUMBER}'
-                sh 'docker rmi shopping-app:v.${BUILD_NUMBER}'
-                sh 'docker rmi khadar3099/shopping-app:v.${BUILD_NUMBER}'
+    stages {
+        stage ('build stage') {
+            steps {
+                sh 'mvn clean install'
             }
-
+        }
+        stage ('build docker image and tag the image') {
+            steps {
+                script {
+                    def imageName = "${DOCKER_REPO}:v.${env.BUILD_TAG}"
+                    def repoName = "${DOCKER_USERNAME}/${DOCKER_REPO}:v.${env.BUILD_TAG}"
+                    sh """
+                        docker build -t ${imageName} .
+                        docker tag ${imageName} ${repoName}
+                    """
+                }
+            }
+        }
+        stage ('push docker image to docker hub') {
+            steps {
+                withCredentials([string(credentialsId: 'dockerhubpswd', variable: 'dockerpswd')]) {
+                    script {
+                        def repoName = "${DOCKER_USERNAME}/${DOCKER_REPO}:v.${env.BUILD_TAG}"
+                        sh """
+                            docker login -u ${DOCKER_USERNAME} -p ${dockerpswd}
+                            docker push ${repoName}
+                            docker rmi ${repoName}
+                        """
+                    }
+                }
+            }
+        }
+        stage ('deploy docker image or run container in ec2 instance') {
+            steps {
+                script {
+                    def imageName = "${DOCKER_USERNAME}/${DOCKER_REPO}:v.${env.BUILD_TAG}"
+                    def containerName = "${CONTAINER_NAME}"
+                    sh """
+                        docker ps -q -f name=${containerName} && docker stop ${containerName} && docker rm ${containerName} || echo "Container not found or already stopped."
+                        docker run -d -p ${HOST_PORT}:${CONTAINER_PORT} --name ${containerName} ${imageName}
+                    """
+                }
+            }
         }
     }
-    stage ('deploy docker image or run container in ec2 instance') {
-        steps {
-            sh 'docker ps -q -f name=shopping_container && docker stop shopping_container && docker rm shopping_container || echo "Container not found or already stopped."'
-            sh 'docker run -d -p 8181:8181 --name shopping_container  khadar3099/shopping-app:v.${BUILD_NUMBER}'
-        }
-    }   
-    stage ('build docker image , tag and push it to dockerhub') {
-        steps {
-            sh '''
-            docker build -t shopping_website:v.${BUILD_NUMBER} .
-            docker tag shopping_website:v.${BUILD_NUMBER} khadar3099/shopping_website:v.${BUILD_NUMBER}
-            docker push  khadar3099/shopping_website:v.${BUILD_NUMBER}
-            docker rmi khadar3099/shopping_website:v.40
-            docker run -d -p 8181:8181 --name shopping_container  khadar3099/shopping_website:v.${BUILD_NUMBER}
-            '''
-            }
-         }
-    }   
-
 }
