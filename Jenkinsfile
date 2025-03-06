@@ -1,26 +1,14 @@
 pipeline {
     agent any
-stages {
-   stage('Load .env File and Set Environment Variables') {
-            steps {
-                script {
-                    // Check if the .env file exists
-                    def envFile = '.env'
-                    if (fileExists(envFile)) {
-                        // Load environment variables from .env file
-                        sh '''#!/bin/bash
-                        # Export each key-value pair in .env as an environment variable
-                        set -o allexport
-                        // shell command source .env to read and load the environment variables from the .env file into the Jenkins pipeline.
-                        source .env 
-                        set +o allexport
-                        '''
-                    } else {
-                        error '.env file not found in the repository'
-                    }
-                }
-            }
-        }
+    environment {
+        DOCKER_USERNAME = 'khadar3099'               // Docker username
+        DOCKER_REPO = 'shopping-app'                 // Docker repository name
+        CONTAINER_NAME = 'shopping_container'         // Container name
+        HOST_PORT = '8181'                           // Host port to expose
+        CONTAINER_PORT = '8181'                      // Container port inside the container
+        BUILD_TAG = "${env.BUILD_NUMBER}"            // Docker image tag (build number)
+    }
+    stages {
         stage ('build stage') {
             steps {
                 sh 'mvn clean install'
