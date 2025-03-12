@@ -3,13 +3,16 @@ pipeline {
     stages{
         stage('build'){
             steps {
-                sh 'mvn clean install'
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/khadar099/kubernetes-automation-java-project.git']]])
             }
         }
-        stage('Build docker image'){
+        stage('static code analysis'){
             steps{
                 script{
-                    sh 'docker build -t website_v1 .'
+                    sh 'mvn clean verify sonar:sonar \
+                      -Dsonar.projectKey=shopping-app \
+                      -Dsonar.host.url=http://3.108.42.106:9000 \
+                      -Dsonar.login=squ_e85ead67c88147526f6d4e785313f73f2c5702b6 '
                 }
             }
         
