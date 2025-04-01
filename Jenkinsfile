@@ -3,7 +3,7 @@ pipeline {
     stages{
         stage('get code'){
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/khadar099/kubernetes-automation-java-project.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/newbranch']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/khadar099/kubernetes-automation-java-project.git']]])
             }
         }
         stage (' build stage') {
