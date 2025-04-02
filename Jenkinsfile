@@ -40,9 +40,9 @@ pipeline {
                 script {
                    withCredentials([string(credentialsId: 'dockerhub-password', variable: 'dockerhub_psd')]) {
                         sh 'docker login -u khadar3099 -p ${dockerhub_psd}'
-                        sh 'docker image push khadar3099/$JOB_NAME:v1.$BUILD_ID'
-                        //sh "docker rmi khadar3099/$JOB_NAME:v1.$BUILD_ID"
-                        //sh 'docker run -p 9191:9090 khadar3099/k8s-demo:v1.7'
+                        sh 'docker image push khadar3099/$JOB_NAME:v.$BUILD_ID'
+                        //sh "docker rmi khadar3099/$JOB_NAME:v.$BUILD_ID"
+                        //sh 'docker run -p 9191:9090 khadar3099/k8s-demo:v.7'
                         }
                     }
                 }
