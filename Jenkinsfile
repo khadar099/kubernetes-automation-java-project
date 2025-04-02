@@ -27,7 +27,8 @@ pipeline {
         }
         stage('Docker image  build stage') {
             steps {
-                sh 'docker build -t newshoppingwebsite:0.1 .'
+                sh'chmod 777 /var/run/docker.sock'
+                sh 'docker image build -t $JOB_NAME:v.$BUILD_ID .'
             }
         }
     }
