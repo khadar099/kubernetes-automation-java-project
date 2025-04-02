@@ -27,7 +27,7 @@ pipeline {
         }
         stage('Docker image  build stage') {
             steps {
-                sh'chmod 777 /var/run/docker.sock'
+                sh'sudo chmod 777 /var/run/docker.sock'
                 sh 'docker image build -t $JOB_NAME:v.$BUILD_ID .'
             }
         }
