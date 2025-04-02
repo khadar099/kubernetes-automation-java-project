@@ -1,17 +1,29 @@
 pipeline {
-    agent any
-    stages{
-        stage('get code'){
+    
+    agent any 
+    
+    stages {
+        stage('Git Checkout'){
+            steps{
+                script{
+                    git branch: 'newbranch', url: 'https://github.com/khadar099/kubernetes-automation-java-project.git'
+                    }
+                }
+            }
+        stage('Maven build') {
+            
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/newbranch']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/khadar099/kubernetes-automation-java-project.git']]])
+                
+                script{
+                    
+                    sh 'mvn clean install'
+                }
             }
         }
-        stage (' build stage') {
-            step {
-                sh ' mvn clean install '
+        stage('test') {
+            steps {
+                sh 'mvn test'
             }
         }
     }
 }
-        
-
