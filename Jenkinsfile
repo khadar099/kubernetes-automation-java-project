@@ -27,7 +27,7 @@ pipeline {
         }
         stage('Docker image  build stage') {
             steps {
-                sh 'docker build -t newshoppingwebsite .'
+                sh 'docker build -t newshoppingwebsite:0.1 .'
             }
         }
     }
