@@ -33,7 +33,19 @@ pipeline {
         stage('Push docker image to  docker hub') {
             steps {
                 sh 'docker image tag $JOB_NAME:v.$BUILD_ID khadar3099/$JOB_NAME:v.$BUILD_ID'
-    }
-}
+                }
+        }
+       stage ('push docker image to  dockerhub') {
+            steps {
+                script {
+                   withCredentials([string(credentialsId: 'dockerhub-password', variable: 'dockerhub_psd')]) {
+                        sh 'docker login -u khadar3099 -p ${dockerhub_psd}'
+                        sh 'docker image push khadar3099/$JOB_NAME:v1.$BUILD_ID'
+                        //sh "docker rmi khadar3099/$JOB_NAME:v1.$BUILD_ID"
+                        //sh 'docker run -p 9191:9090 khadar3099/k8s-demo:v1.7'
+                        }
+                    }
+                }
+            }
     }
 }
