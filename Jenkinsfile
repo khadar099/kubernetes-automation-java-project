@@ -25,5 +25,10 @@ pipeline {
                 sh 'mvn test'
             }
         }
+        stage('Docker image  build stage') {
+            steps {
+                sh 'docker build -t newshoppingwebsite .'
+            }
+        }
     }
 }
