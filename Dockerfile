@@ -1,5 +1,5 @@
 FROM openjdk:8
-EXPOSE 9090
-COPY /target/demo.txt /aap/demo.txt
-ADD target/devops-integration.jar devops-integration.jar
-ENTRYPOINT ["java","-jar","/devops-integration.jar"]
+WORKDIR /app
+EXPOSE 8181
+ADD target/khadar-shoppingwebsite.jar /app/khadar-shoppingwebsite.jar
+ENTRYPOINT ["java","-jar","/khadar-shoppingwebsite.jar"]
