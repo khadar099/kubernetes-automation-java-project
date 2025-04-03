@@ -50,6 +50,7 @@ pipeline {
             }
         stage('deploy docker image') {
             steps {
+                 sh 'docker ps -q -f name=shopping-container && docker stop shopping-container && docker rm shopping-container || echo "Container not found or already stopped."
                 sh 'docker run -d -p 9191:8181 --name shopping-container khadar3099/$JOB_NAME:v.$BUILD_ID'
             }
         }
