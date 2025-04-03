@@ -30,7 +30,7 @@ pipeline {
                 sh 'docker image build -t $JOB_NAME:v.$BUILD_ID .'
             }
         }
-        stage('Push docker image to  docker hub') {
+        stage('Tag docker image') {
             steps {
                 sh 'docker image tag $JOB_NAME:v.$BUILD_ID khadar3099/$JOB_NAME:v.$BUILD_ID'
                 }
