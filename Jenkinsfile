@@ -32,7 +32,7 @@ pipeline {
         }
         stage('Tag docker image') {
             steps {
-                sh 'docker image tag $JOB_NAME:v.$BUILD_ID karthicdevops01/$JOB_NAME:v.$BUILD_ID'
+                sh 'docker image tag $JOB_NAME:v.$BUILD_ID karthidevops01/$JOB_NAME:v.$BUILD_ID'
                 }
         }
        stage ('push docker image to  dockerhub') {
@@ -40,10 +40,10 @@ pipeline {
                 script {
                    withCredentials([string(credentialsId: 'dockerhub-password', variable: 'dockerhub_psd')]) {
                         sh '''
-                        docker login -u karthicdevops01 -p ${dockerhub_psd}
-                        docker image push karthicdevops01/$JOB_NAME:v.$BUILD_ID
+                        docker login -u karthidevops01 -p ${dockerhub_psd}
+                        docker image push karthidevops01/$JOB_NAME:v.$BUILD_ID
                         docker rmi $JOB_NAME:v.$BUILD_ID
-                        docker rmi karthicdevops01/$JOB_NAME:v.$BUILD_ID
+                        docker rmi karthidevops01/$JOB_NAME:v.$BUILD_ID
                         ''' 
                         }
                     }
