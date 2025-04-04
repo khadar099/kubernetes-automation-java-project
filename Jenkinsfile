@@ -53,7 +53,7 @@ pipeline {
             steps {
                  sh '''
                  docker ps -q -f name=shopping-container && docker stop shopping-container && docker rm shopping-container || echo "Container not found or already stopped."
-                 docker run -d -p 9191:8181 --name shopping-container karthicdevops01/$JOB_NAME:v.$BUILD_ID
+                 docker run -d -p 9191:8181 --name shopping-container karthidevops01/$JOB_NAME:v.$BUILD_ID
                  '''
             }
         }
