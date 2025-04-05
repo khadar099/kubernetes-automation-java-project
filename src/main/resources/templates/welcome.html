@@ -13,18 +13,69 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column; /* Stack the search bar and welcome text */
             color: white;
             font-family: Arial, sans-serif;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add some text shadow for visibility */
+            margin: 0;
         }
 
-        h1 {
-            font-size: 4em;
-            text-align: center;
+        /* Style for the search bar */
+        .search-container {
+            width: 100%;
+            position: absolute;
+            top: 20px;
+            left: 0;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            z-index: 1; /* Ensure it stays on top */
         }
+
+        .search-container input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Scrolling effect for the welcome text */
+        .scrolling-text {
+            font-size: 3em;
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            position: absolute;
+            bottom: 10%;
+            animation: scroll-text 10s linear infinite;
+        }
+
+        @keyframes scroll-text {
+            0% {
+                transform: translateX(100%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
     </style>
 </head>
 <body>
-    <h1>Welcome to the login page -----------shopping</h1>
+
+    <!-- Search Bar -->
+    <div class="search-container">
+        <form action="#" method="get">
+            <input type="text" placeholder="Search..." name="search">
+        </form>
+    </div>
+
+    <!-- Scrolling Welcome Text -->
+    <div class="scrolling-text">
+        Welcome to the login page
+    </div>
+
 </body>
 </html>
