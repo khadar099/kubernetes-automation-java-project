@@ -33,11 +33,11 @@ pipeline {
         }
         stage ('push docker image to docker hub') {
             steps {
-                withCredentials([string(credentialsId: 'dockerhubpswd', variable: 'dockerpswd')]) {
+                withCredentials([string(credentialsId: 'dockerhub-password', variable: 'dockerhub_psd')]) {
                     script {
                         def repoName = "${DOCKER_USERNAME}/${DOCKER_REPO}:v.${env.BUILD_TAG}"
                         sh """
-                            docker login -u ${DOCKER_USERNAME} -p ${dockerpswd}
+                            docker login -u ${DOCKER_USERNAME} -p ${dockerhub_psd}
                             docker push ${repoName}
                             docker rmi ${repoName}
                         """
