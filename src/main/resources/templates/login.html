@@ -18,27 +18,25 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add some text shadow for visibility */
             margin: 0;
             overflow: hidden;
+            position: relative;
         }
 
-        /* Make the title scroll */
+        /* Make the title scroll from left to right */
         h1 {
-            font-size: 4em;
+            font-size: 2.5em; /* Reduced font size */
             text-align: center;
             position: absolute;
-            top: -100px; /* Start above the screen */
-            animation: scrollDown 3s ease-out infinite; /* Animation to scroll the text */
+            left: -100%; /* Start off-screen to the left */
+            animation: scrollLeftToRight 5s linear infinite; /* Animation to scroll the text */
         }
 
-        /* Animation for scrolling */
-        @keyframes scrollDown {
+        /* Animation for scrolling from left to right */
+        @keyframes scrollLeftToRight {
             0% {
-                top: -100px;
-            }
-            50% {
-                top: 20px; /* End position for the text */
+                left: -100%; /* Start off-screen */
             }
             100% {
-                top: -100px;
+                left: 100%; /* End off-screen to the right */
             }
         }
 
