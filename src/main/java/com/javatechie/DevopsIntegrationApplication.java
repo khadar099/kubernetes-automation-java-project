@@ -11,7 +11,7 @@ public class DevopsIntegrationApplication {
 
     @GetMapping("/")
     public String welcome() {
-        return "welcome"; // Thymeleaf will look for welcome.html in the templates folder
+        return "login"; // Thymeleaf will look for welcome.html in the templates folder
     }
 
     public static void main(String[] args) {
