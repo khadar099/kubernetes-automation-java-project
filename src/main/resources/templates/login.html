@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to the login page</title>
+    <style>
+        /* Set the full-screen background image */
+        body {
+            background-image: url('/images/360_F_286054327.jpg'); /* Path to the image */
+            background-size: cover; /* Make the background image cover the entire screen */
+            background-position: left;
+            height: 100vh; /* Full viewport height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add some text shadow for visibility */
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* Make the title scroll */
+        h1 {
+            font-size: 4em;
+            text-align: center;
+            position: absolute;
+            top: -100px; /* Start above the screen */
+            animation: scrollDown 3s ease-out infinite; /* Animation to scroll the text */
+        }
+
+        /* Animation for scrolling */
+        @keyframes scrollDown {
+            0% {
+                top: -100px;
+            }
+            50% {
+                top: 20px; /* End position for the text */
+            }
+            100% {
+                top: -100px;
+            }
+        }
+
+        /* Add an image and position it on the right */
+        .image-container {
+            position: absolute;
+            right: 10px; /* Space from the right edge */
+            bottom: 10px; /* Space from the bottom */
+        }
+
+        .image-container img {
+            width: 200px; /* Resize the image */
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to the login page</h1>
+    <div class="image-container">
+        <img src="/images/360_F_286054327.jpg" alt="Login Image">
+    </div>
+</body>
+</html>
