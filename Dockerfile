@@ -3,7 +3,7 @@ FROM openjdk:11-jdk-slim
 
 # Set the working directory inside the container
 WORKDIR /app
-
+WORKDIR /demo
 # Copy the jar file into the container's working directory
 COPY target/khadar-shoppingwebsite.jar /app/khadar-shoppingwebsite.jar
 
