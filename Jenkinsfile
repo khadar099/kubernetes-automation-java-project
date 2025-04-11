@@ -1,12 +1,12 @@
 pipeline {
     
-    agent node1 
+    agent {node1}
     
     stages {
         stage('Git Checkout'){
             steps{
                 script{
-                    git branch: 'newbranch', url: 'https://github.com/khadar099/kubernetes-automation-java-project.git'
+                    git branch: 'SIT', url: 'https://github.com/khadar099/kubernetes-automation-java-project.git'
                     }
                 }
             }
