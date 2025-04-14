@@ -3,6 +3,7 @@ pipeline {
     agent any
     parameters {
         choice(name: 'Environment' , choices: ['dev', 'SIT', 'UAT', 'Prod'], description: environments)
+    }
     stages {
         stage('Git Checkout'){
             steps{
