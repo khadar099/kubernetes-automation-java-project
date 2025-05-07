@@ -2,10 +2,9 @@
 FROM openjdk:11-jdk-slim
 
 # Set the working directory inside the container
-WORKDIR /app
-
+WORKDIR /karthic
 # Copy the jar file into the container's working directory
-COPY target/khadar-shoppingwebsite.jar /app/khadar-shoppingwebsite.jar
+COPY target/khadar-shoppingwebsite.jar /karthic/khadar-shoppingwebsite.jar
 
 # Expose the port that the Spring Boot app will run on
 EXPOSE 8181
