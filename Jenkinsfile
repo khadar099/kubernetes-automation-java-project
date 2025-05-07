@@ -49,9 +49,9 @@ pipeline {
                     }
                 }
             }
-        stage ('deploy to eks') {
+        stage('Deploy to EKS') {
             steps {
-                     withCredentials([usernamePassword(credentialsId: 'aws-credentials', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                withCredentials([usernamePassword(credentialsId: 'aws-credentials', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                     script {
                 sh """
                     echo "Configuring AWS CLI..."
@@ -70,9 +70,12 @@ pipeline {
                     echo "Applying Kubernetes manifests..."
                     kubectl apply -f shopping-deployment.yml
                     kubectl apply -f shopping-service.yml
+                """
+            }
+        }
+    }
     }
 }
 }
-}
-}
+      
 }
