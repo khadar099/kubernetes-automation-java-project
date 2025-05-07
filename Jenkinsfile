@@ -68,7 +68,7 @@ pipeline {
 
                 sh """
                     echo "Applying Kubernetes manifests..."
-                    kubectl apply -f skbbank-deployment.yml
-                    kubectl apply -f skbbank-service.yml
+                    kubectl apply -f shopping-deployment.yml
+                    kubectl apply -f shopping-service.yml
     }
 }
