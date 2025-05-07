@@ -64,13 +64,13 @@ pipeline {
                 """
 
                 // Replace image tag dynamically
-                sed -i "s|image: *khadar3099/shopping:.*|image: khadar3099/shopping:v.$BUILD_NUMBER|g" shopping-deployment.yml
+                sed -i "s|image: *khadar3099/shopping:.*|image: khadar3099/shopping:v.$BUILD_NUMBER|g" shoppingdeployment.yml
 
 
                 sh """
                     echo "Applying Kubernetes manifests..."
-                    kubectl apply -f shopping-deployment.yml
-                    kubectl apply -f shopping-service.yml
+                    kubectl apply -f shoppingdeployment.yml
+                    kubectl apply -f shoppingservice.yml
                 """
             }
         }
