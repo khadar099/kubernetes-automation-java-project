@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        SONARQUBE_ENV = 'MySonarQubeServer' // replace with your actual SonarQube server name
+        SONARQUBE_ENV = 'SonarQube' // replace with your actual SonarQube server name
     }
 
     stages {
