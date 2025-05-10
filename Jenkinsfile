@@ -25,7 +25,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv("${env.SONARQUBE_ENV}") {
-                    sh 'mvn sonar:sonar -Dsonar.projectKey=shopping -Dsonar.projectName=ShoppingApp'
+                    sh 'mvn sonar:sonar'
                 }
             }
         }
