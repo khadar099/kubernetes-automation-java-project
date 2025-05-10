@@ -22,13 +22,13 @@ pipeline {
             }
         }
 
-        stage("build & SonarQube analysis") {
-          node {
-              withSonarQubeEnv('SonarQube') {
-                 sh 'mvn clean package sonar:sonar'
-              }    
-          }
-      }
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv("${env.SONARQUBE_ENV}") {
+                    sh 'mvn sonar:sonar -Dsonar.projectKey=shopping -Dsonar.projectName=ShoppingApp'
+                }
+            }
+        }
       
         stage('test') {
             steps {
