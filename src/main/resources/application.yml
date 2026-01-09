@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/shopping?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    url: jdbc:mysql://172.31.29.63:3306/shopping?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: shopuser
     password: Shop@1234
     driver-class-name: com.mysql.cj.jdbc.Driver
