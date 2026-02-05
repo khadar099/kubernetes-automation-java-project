@@ -28,9 +28,9 @@ stages {
     stage('deploy on ec2 instance') {
         steps {
             sh '''
-            docker stop shopping-container
-            docker rm shopping-container
-            docker run -d -p 8181:8181 --name shopping-container khadar3099/shoppingimage:1.2'
+               docker stop shopping-container || true
+               docker rm shopping-container || true
+              docker run -d -p 8181:8181 --name shopping-container khadar3099/shoppingimage:1.2
             '''
         }
     }
