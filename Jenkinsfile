@@ -6,7 +6,7 @@ pipeline {
         stage('Git Checkout'){
             steps{
                 script{
-                    git branch: 'feature/testing', url: 'https://github.com/khadar099/kubernetes-automation-java-project.git'
+                    git branch: 'feature/changing-port-in-dockerfile', url: 'https://github.com/khadar099/kubernetes-automation-java-project.git'
                     }
                 }
             }
@@ -18,6 +18,11 @@ pipeline {
                     
                     sh 'mvn clean install'
                 }
+            }
+        }
+        stage('test') {
+            steps {
+                sh 'mvn test'
             }
         }
         stage('Docker image  build stage') {
@@ -35,7 +40,7 @@ pipeline {
                 script {
                    withCredentials([string(credentialsId: 'dockerhub-password', variable: 'dockerhub_psd')]) {
                         sh '''
-                        docker login -u khadar3099 -p Khadar@890
+                        docker login -u khadar3099 -p ${dockerhub_psd}
                         docker image push khadar3099/shopping:v.$BUILD_NUMBER
                         docker rmi shopping:v.$BUILD_NUMBER
                         docker rmi khadar3099/shopping:v.$BUILD_NUMBER
