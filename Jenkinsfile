@@ -38,15 +38,16 @@ pipeline {
        stage ('push docker image to  dockerhub') {
             steps {
                 script {
-                       sh '''
-                        withCredentials([string(credentialsId: 'dokerhubpassword', variable: 'dockerhubpasssword')]) {
-                        docker login -u khadar3099 -p ${dockerhubpasssword}
-                        docker image push khadar3099/shopping:v.$BUILD_NUMBER
-                        docker rmi shopping:v.$BUILD_NUMBER
-                        docker rmi khadar3099/shopping:v.$BUILD_NUMBER
-                        ''' 
+                    withCredentials([string(credentialsId: 'dokerhubpassword', variable: 'dockerhubpasssword')]) {
+                    sh ''''
+                    docker login -u khadar3099 -p ${dockerhubpasssword}
+                    docker image push khadar3099/shopping:v.$BUILD_NUMBER
+                    docker rmi shopping:v.$BUILD_NUMBER
+                    docker rmi khadar3099/shopping:v.$BUILD_NUMBER
+                    ''' 
                         }
                     }
                 }
             }
+    }
     }
