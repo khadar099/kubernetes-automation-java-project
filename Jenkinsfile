@@ -6,7 +6,7 @@ pipeline {
         stage('Git Checkout'){
             steps{
                 script{
-                    git branch: 'env.BRANCH_NAME', url: 'https://github.com/khadar099/kubernetes-automation-java-project.git'
+                    git branch: 'feature/changing-port-in-dockerfile', url: 'https://github.com/khadar099/kubernetes-automation-java-project.git'
                     }
                 }
             }
