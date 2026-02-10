@@ -16,7 +16,7 @@ pipeline {
                 
                 script{
                     
-                    sh 'mvn clean install'
+                    sh 'mvn clean package'
                 }
             }
         }
