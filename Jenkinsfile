@@ -38,9 +38,9 @@ pipeline {
        stage('Push Docker image to Docker Hub') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'dockerhub-password', variable: 'dockerhub_psd')]) {
+                    withCredentials([string(credentialsId: 'dokerhubpasword', variable: 'dokerhubpsd')]) {
                         sh '''
-                        docker login -u khadar3099 -p ${dockerhub_psd}
+                        docker login -u khadar3099 -p ${dokerhubpsd}
                         docker image push khadar3099/shopping:v.${BUILD_NUMBER}
                         docker rmi shopping:v.${BUILD_NUMBER}
                         docker rmi khadar3099/shopping:v.${BUILD_NUMBER}
