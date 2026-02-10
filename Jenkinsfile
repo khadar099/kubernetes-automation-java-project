@@ -35,19 +35,27 @@ pipeline {
                 sh 'docker image tag shopping:v.$BUILD_NUMBER khadar3099/shopping:v.$BUILD_NUMBER'
                 }
         }
-       stage ('push docker image to  dockerhub') {
+       stage('Push Docker image to Docker Hub') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'dokerhubpassword', variable: 'dockerhubpasssword')]) {
-                    sh ''''
-                    docker login -u khadar3099 -p ${dockerhubpasssword}
-                    docker image push khadar3099/shopping:v.$BUILD_NUMBER
-                    docker rmi shopping:v.$BUILD_NUMBER
-                    docker rmi khadar3099/shopping:v.$BUILD_NUMBER
-                    ''' 
-                        }
+                    withCredentials([string(credentialsId: 'dockerhub-password', variable: 'dockerhub_psd')]) {
+                        sh '''
+                        docker login -u khadar3099 -p ${dockerhub_psd}
+                        docker image push khadar3099/shopping:v.${BUILD_NUMBER}
+                        docker rmi shopping:v.${BUILD_NUMBER}
+                        docker rmi khadar3099/shopping:v.${BUILD_NUMBER}
+                        '''
                     }
                 }
             }
+        }
+        stage('Deploy Docker image') {
+            steps {
+                sh '''
+                docker ps -q -f name=shopping-container && docker stop shopping-container && docker rm shopping-container || echo "Container not found or already stopped."
+                docker run -d -p 8181:8181 --name shopping-container khadar3099/shopping:v.${BUILD_NUMBER}
+                '''
+            }
+        }
     }
-    }
+}
