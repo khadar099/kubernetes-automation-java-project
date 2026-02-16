@@ -1,78 +1,39 @@
 pipeline {
-    agent any
-
+    
+    agent any 
+    
     stages {
-
-        stage('Load Config') {
+        stage('Git Checkout'){
+            steps{
+                script{
+                    git branch: 'demo-branch', url: 'https://github.com/khadar099/kubernetes-automation-java-project.git'
+                    }
+                }
+            }
+        stage('Maven build') {
+            
             steps {
-                script {
-                    def props = readProperties file: 'config.properties'
+                
+                script{
                     
-                    props.each { key, value ->
-                        env."${key}" = value   // ✅ sandbox-safe way
-                    }
+                    sh 'mvn clean install'
                 }
             }
         }
-
-        stage('Build Application') {
+        stage('test') {
             steps {
-                sh 'mvn clean install'
+                sh 'mvn test'
             }
         }
-
-        stage('Build Docker Image') {
+        stage('Docker image  build stage') {
             steps {
-                script {
-                    def tag = "v.${env.BUILD_NUMBER}"
-                    def imageName = "${env.DOCKER_REPO}:${tag}"
-                    def repoName = "${env.DOCKER_USERNAME}/${env.DOCKER_REPO}:${tag}"
-
-                    sh """
-                        docker build -t ${imageName} .
-                        docker tag ${imageName} ${repoName}
-                    """
-                }
+                sh 'docker image build -t shopping:v.$BUILD_NUMBER .'
             }
         }
-
-        stage('Push Docker Image') {
+        stage('Tag docker image') {
             steps {
-                script {
-                    def tag = "v.${env.BUILD_NUMBER}"
-                    def repoName = "${env.DOCKER_USERNAME}/${env.DOCKER_REPO}:${tag}"
-
-                    withCredentials([string(credentialsId: 'dockerhubpswd', variable: 'dockerpswd')]) {
-                        sh """
-                            echo "${dockerpswd}" | docker login -u "${env.DOCKER_USERNAME}" --password-stdin
-                            docker push ${repoName}
-                        """
-                    }
+                sh 'docker image tag shopping:v.$BUILD_NUMBER khadar3099/shopping:v.$BUILD_NUMBER'
                 }
-            }
-        }
-
-        stage('Deploy Container') {
-            steps {
-                script {
-                    def tag = "v.${env.BUILD_NUMBER}"
-                    def imageName = "${env.DOCKER_USERNAME}/${env.DOCKER_REPO}:${tag}"
-
-                    sh """
-                        if docker ps -a --format '{{.Names}}' | grep -w ${env.CONTAINER_NAME}; then
-                            docker stop ${env.CONTAINER_NAME}
-                            docker rm ${env.CONTAINER_NAME}
-                        else
-                            echo "Container not running"
-                        fi
-
-                        docker run -d \
-                            -p ${env.HOST_PORT}:${env.CONTAINER_PORT} \
-                            --name ${env.CONTAINER_NAME} \
-                            ${imageName}
-                    """
-                }
-            }
         }
     }
 }
