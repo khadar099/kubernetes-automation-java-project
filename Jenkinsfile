@@ -7,8 +7,9 @@ pipeline {
             steps {
                 script {
                     def props = readProperties file: 'config.properties'
+                    
                     props.each { key, value ->
-                        env[key] = value
+                        env."${key}" = value   // ✅ sandbox-safe way
                     }
                 }
             }
@@ -43,7 +44,7 @@ pipeline {
 
                     withCredentials([string(credentialsId: 'dockerhubpswd', variable: 'dockerpswd')]) {
                         sh """
-                            echo ${dockerpswd} | docker login -u ${env.DOCKER_USERNAME} --password-stdin
+                            echo "${dockerpswd}" | docker login -u "${env.DOCKER_USERNAME}" --password-stdin
                             docker push ${repoName}
                         """
                     }
@@ -58,8 +59,17 @@ pipeline {
                     def imageName = "${env.DOCKER_USERNAME}/${env.DOCKER_REPO}:${tag}"
 
                     sh """
-                        docker ps -q -f name=${env.CONTAINER_NAME} | grep -q . && docker stop ${env.CONTAINER_NAME} && docker rm ${env.CONTAINER_NAME} || echo "Container not running"
-                        docker run -d -p ${env.HOST_PORT}:${env.CONTAINER_PORT} --name ${env.CONTAINER_NAME} ${imageName}
+                        if docker ps -a --format '{{.Names}}' | grep -w ${env.CONTAINER_NAME}; then
+                            docker stop ${env.CONTAINER_NAME}
+                            docker rm ${env.CONTAINER_NAME}
+                        else
+                            echo "Container not running"
+                        fi
+
+                        docker run -d \
+                            -p ${env.HOST_PORT}:${env.CONTAINER_PORT} \
+                            --name ${env.CONTAINER_NAME} \
+                            ${imageName}
                     """
                 }
             }
