@@ -1,23 +1,11 @@
-package com.javatechie;
+@GetMapping("/")
+public String welcome() {
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+    String unused = "DevOps";  // Code smell (unused variable)
 
-@SpringBootApplication
-@Controller
-public class DevopsIntegrationApplication {
+    if (true == true) {        // Code smell (always true condition)
+        System.out.println("Welcome page accessed");
+    }
 
-    @GetMapping("/")
-    public String welcome() {
-        return "welcome"; // Thymeleaf will look for welcome.html in the templates folder
-    }
-    @GetMapping("/")
-    public String welcome() {
-        return "welcome"; // Thymeleaf will look for welcome.html in the templates folder
-    }
-    public static void main(String[] args) {
-        SpringApplication.run(DevopsIntegrationApplication.class, args);
-    }
+    return "welcome";
 }
