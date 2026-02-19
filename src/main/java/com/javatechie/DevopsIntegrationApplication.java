@@ -2,15 +2,22 @@ package com.javatechie;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 
-public class DemoService {
+@SpringBootApplication
+@Controller
+public class DevopsIntegrationApplication {
 
-    public void test() {
-        String a = "hello";
-        String b = "hello";   // duplicate literal (code smell)
-
-        if(true == true) {    // bad practice
-            System.out.println("Always true");
-        }
+    @GetMapping("/")
+    public String welcome() {
+        return "welcome"; // Thymeleaf will look for welcome.html in the templates folder
     }
-    ]
+    @GetMapping("/")
+    public String welcome() {
+        return "welcome"; // Thymeleaf will look for welcome.html in the templates folder
+    }
+    public static void main(String[] args) {
+        SpringApplication.run(DevopsIntegrationApplication.class, args);
+    }
+}
