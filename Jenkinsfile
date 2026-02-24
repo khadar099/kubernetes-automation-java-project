@@ -20,59 +20,12 @@ pipeline {
                 sh 'mvn clean install'
             }
         }
-
-        stage('Build Docker Image') {
+        stage('SonarQube Analysis') {
             steps {
-                script {
-                    def tag = "v.${env.BUILD_NUMBER}"
-                    def imageName = "${env.DOCKER_REPO}:${tag}"
-                    def repoName = "${env.DOCKER_USERNAME}/${env.DOCKER_REPO}:${tag}"
-
-                    sh """
-                        docker build -t ${imageName} .
-                        docker tag ${imageName} ${repoName}
-                    """
-                }
-            }
-        }
-
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    def tag = "v.${env.BUILD_NUMBER}"
-                    def repoName = "${env.DOCKER_USERNAME}/${env.DOCKER_REPO}:${tag}"
-
-                    withCredentials([string(credentialsId: 'dockerhubpswd', variable: 'dockerpswd')]) {
-                        sh """
-                            echo "${dockerpswd}" | docker login -u "${env.DOCKER_USERNAME}" --password-stdin
-                            docker push ${repoName}
-                        """
-                    }
-                }
-            }
-        }
-
-        stage('Deploy Container') {
-            steps {
-                script {
-                    def tag = "v.${env.BUILD_NUMBER}"
-                    def imageName = "${env.DOCKER_USERNAME}/${env.DOCKER_REPO}:${tag}"
-
-                    sh """
-                        if docker ps -a --format '{{.Names}}' | grep -w ${env.CONTAINER_NAME}; then
-                            docker stop ${env.CONTAINER_NAME}
-                            docker rm ${env.CONTAINER_NAME}
-                        else
-                            echo "Container not running"
-                        fi
-
-                        docker run -d \
-                            -p ${env.HOST_PORT}:${env.CONTAINER_PORT} \
-                            --name ${env.CONTAINER_NAME} \
-                            ${imageName}
-                    """
-                }
+                withSonarQubeEnv("${SONAR_SERVER}") {
+                   sh ' mvn clean verify sonar:sonar -Dsonar.projectKey=springboot-app'
             }
         }
     }
+}
 }
