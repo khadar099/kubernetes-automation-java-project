@@ -22,7 +22,7 @@ pipeline {
         }
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv("${SONAR_SERVER}") {
+                withSonarQubeEnv("Sonarqube") {
                    sh ' mvn clean verify sonar:sonar -Dsonar.projectKey=springboot-app'
             }
         }
