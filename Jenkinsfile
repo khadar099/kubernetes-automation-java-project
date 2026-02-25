@@ -5,27 +5,10 @@ pipeline {
 
         stage('Load Config') {
             steps {
-                script {
-                    def props = readProperties file: 'config.properties'
-                    
-                    props.each { key, value ->
-                        env."${key}" = value   // ✅ sandbox-safe way
-                    }
-                }
-            }
+                checkout scmGit(branches: [[name: '*/feature/changing-port-in-dockerfile']], extensions: [], userRemoteConfigs: [[credentialsId: 'gitcreds', url: 'https://github.com/khadar099/kubernetes-automation-java-project.git']])
         }
-
-        stage('Build Application') {
-            steps {
-                sh 'mvn clean install'
-            }
-        }
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv("Sonarqube") {
-                   sh ' mvn clean verify sonar:sonar -Dsonar.projectKey=springboot-app'
-            }
         }
     }
 }
-}
+
+        
