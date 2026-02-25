@@ -16,18 +16,12 @@ environment {
     }
 }
 stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv("${SONAR_SERVER}") {
-                    sh '''
-                       mvn sonar:sonar \
-                       -Dsonar.projectKey=springboot-app \
-                       -Dsonar.projectName="springboot-app" \
-                       -Dsonar.host.url=http://13.235.50.77:9000 \
-                       -Dsonar.login=squ_960238f3f87faca7f0948f6c20ec0a4784efd5ad
-                    '''
-                }
-            }
+    steps {
+        withSonarQubeEnv('SonarQubeServer') {
+            sh 'mvn clean verify sonar:sonar'
         }
+    }
+}
 
         stage('Quality Gate') {
             steps {
