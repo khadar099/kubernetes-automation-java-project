@@ -24,10 +24,10 @@ stage('SonarQube Analysis') {
 }
         stage('docker build') {
             steps [
-                sh ' docker build -t shoppingimage:1.0 .
+                sh ' docker build -t shoppingimage:1.0 . '
     }
+ }
 }
-                }
-                }
+}
 
 
