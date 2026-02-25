@@ -39,6 +39,11 @@ stage('Quality Gate') {
         }
     }
 }
+        stage('docker buid') {
+          steps {
+              sh 'docker build -t shoppingimage:1.0 .'
+    }
+}
     }
 }
 
