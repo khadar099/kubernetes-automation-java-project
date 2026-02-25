@@ -22,6 +22,23 @@ stage('SonarQube Analysis') {
         }
     }
 }
+stage('Quality Gate') {
+    steps {
+        timeout(time: 5, unit: 'MINUTES') {
+            script {
+                def qg = waitForQualityGate() // capture result
+                echo "Quality Gate status: ${qg.status}"
+
+                if (qg.status != 'OK') {
+                    // do something if failed
+                    error "Quality Gate failed: ${qg.status}"
+                } else {
+                    echo "Quality Gate passed ✅"
+                }
+            }
+        }
+    }
+}
         stage('docker build') {
             steps {
                 sh 'docker build -t shoppingimage:1.0 .'
